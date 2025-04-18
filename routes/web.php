@@ -13,7 +13,8 @@ use App\Http\Controllers\OpenAIController;
 */
 
 // Redireciona a raiz para a listagem de eBooks
-Route::redirect('/', '/ebooks');
+Route::view('/', 'welcome');
+
 
 // Dashboard (precisa estar autenticado)
 Route::get('/dashboard', function () {
@@ -39,6 +40,8 @@ Route::post('/chat/receive', [ChatController::class, 'processMessage']);
 Route::get('/openai/test', [OpenAIController::class, 'testOpenAI']);
 Route::get('/test-openai', [OpenAIController::class, 'index']);
 Route::post('/test-openai', [OpenAIController::class, 'ask']);
+Route::post('/chat/receive', [ChatController::class, 'processMessage']);
+
 
 // Rotas de autenticação (login, registro, etc.)
 require __DIR__.'/auth.php';
