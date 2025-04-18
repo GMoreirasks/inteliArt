@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use OpenAI\Client as OpenAIClient;
-use OpenAI\Transporter\HttpTransporter;
+use OpenAI;
 
 class OpenAIController extends Controller
 {
@@ -20,24 +19,21 @@ class OpenAIController extends Controller
             'question' => 'required|string',
         ]);
 
-        // Obter a chave da API do .env
-        $apiKey = env('OPENAI_API_KEY');
-
-        // Criar o transportador para o cliente OpenAI
-        $transporter = new HttpTransporter();
-
         // Instanciar o cliente OpenAI
-        $client = new OpenAIClient($transporter, $apiKey);
+        $client = OpenAI::client(env('OPENAI_API_KEY'));
 
         // Enviar a pergunta para a OpenAI
-        $response = $client->completions()->create([
-            'model' => 'gpt-3.5-turbo', // Ou outro modelo que você escolher
-            'prompt' => $request->input('question'),
+        // Note que para o modelo gpt-3.5-turbo você deve usar o método chat()
+        $response = $client->chat()->create([
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                ['role' => 'user', 'content' => $request->input('question')],
+            ],
             'max_tokens' => 100,
         ]);
 
         // Pegar a resposta
-        $answer = $response['choices'][0]['text'];
+        $answer = $response['choices'][0]['message']['content'];
 
         // Retornar a resposta para a view
         return view('test-openai', compact('answer'));
