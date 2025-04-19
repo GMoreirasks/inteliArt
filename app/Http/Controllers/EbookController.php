@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Ebook;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class EbookController extends Controller
 {
@@ -92,7 +96,7 @@ class EbookController extends Controller
     {
         // Deleta a capa do eBook, se existir
         if ($ebook->cover_image) {
-            \Storage::delete('public/' . $ebook->cover_image);
+            Storage::delete($ebook->cover_image);
         }
 
         // Deleta o eBook
